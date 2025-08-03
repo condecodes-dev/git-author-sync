@@ -1,1 +1,5 @@
-OLD_NAME=\nOLD_EMAIL=\nNEW_NAME=\nNEW_EMAIL=
+# Configuration for identity rewriting
+OLD_NAME=condecodes-dev
+OLD_EMAIL=condecodes@gmail.com
+NEW_NAME=wesley.borges
+NEW_EMAIL=wesley.borges@sidia.com
