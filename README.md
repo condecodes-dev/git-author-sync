@@ -18,11 +18,13 @@ This tool is intended for developers who:
 
 ## Project Structure
 
+```
 git-author-sync/
-├── config_user.txt # Identity mapping file
-├── git-filter-repo.py # Official git-filter-repo script
-├── rewrite_commits.py # Cross-platform Python controller
-└── README.md # This documentation
+├── config_user.txt        # Identity mapping file
+├── git-filter-repo.py     # Official git-filter-repo script
+├── rewrite_commits.py     # Python controller script
+└── README.md              # This documentation
+```
 
 ---
 
@@ -36,7 +38,7 @@ git-author-sync/
 
 ## Configuration (`config_user.txt`)
 
-Edit the file `config_user.txt` to reflect your identity mapping:
+Edit the file `config_user.txt` with the identity mapping to be applied:
 
 ```
 OLD_NAME=your-personal-name
@@ -45,7 +47,7 @@ NEW_NAME=your-corporate-name
 NEW_EMAIL=your.corporate@email.com
 ```
 
-All four fields are required. The `OLD_*` values must match exactly what appears in:
+All fields are required. The `OLD_*` values must match exactly what appears in:
 
 ```bash
 git log --pretty=format:"%an <%ae>" | sort | uniq
@@ -55,52 +57,73 @@ git log --pretty=format:"%an <%ae>" | sort | uniq
 
 ## How to Use
 
-Place the git-author-sync/ folder next to your Git project folder.
+### 1. Run the script from inside your Git project folder, pointing to the tool path
 
-Example structure:
+You **do not need to copy `git-author-sync/` into your project**. Simply be inside the Git repo you want to rewrite and call the script directly.
 
+#### On Windows:
+
+```powershell
+python C:\path\to\git-author-sync\rewrite_commits.py
 ```
-/Documents/
-├── my-project/
-└── git-author-sync/
-```
 
-From inside your Git project (e.g. my-project), run:
+#### On Linux/macOS:
 
 ```bash
-python ../git-author-sync/rewrite_commits.py
+python3 /path/to/git-author-sync/rewrite_commits.py
 ```
 
-The script will:
+This will:
 
-- Load the identity mapping from config_user.txt
-- Run git-filter-repo with force
+- Load `config_user.txt`
+- Run `git-filter-repo` with the configured identity
 - Rewrite all commits across all branches and tags
-- Output push instructions
+- Remove the remote origin (as a safety measure)
 
 ---
 
-## Example Output
+## After Rewriting: Push to a New Remote Repository
 
+### If you're working on a personal machine for testing:
+
+1. Create a new empty repository on GitHub (without README)
+2. Add the new remote:
+
+```bash
+git remote add origin https://github.com/your-username/your-test-repo.git
 ```
-[INFO] Rewriting commit history using git-filter-repo...
 
-History rewritten successfully.
+3. Force-push the rewritten history:
 
-Current branch: main
-Remote origin: https://github.com/your-org/your-repo.git
-
-To push your changes, run:
-  git push --force --tags origin 'refs/heads/*'
+```bash
+git push --force --tags origin 'refs/heads/*'
 ```
 
 ---
 
-## Notes and Best Practices
+## Real-World Use (Corporate Environment)
 
-- Always make a backup of your repository before rewriting
-- Do not run this on shared branches or after collaborators have pulled
-- Use git push --force responsibly
+In a company setup:
+
+- You typically **already have the destination repo created**
+- After rewriting locally, you just need to:
+
+```bash
+git remote set-url origin https://github.com/company-org/your-repo.git
+git push --force --tags origin 'refs/heads/*'
+```
+
+---
+
+## Best Practices
+
+- Always work on a backup or disposable copy of the repository
+- Only push to remotes you control (never shared ones)
+- Double check commit logs after rewriting with:
+
+```bash
+git log --all --graph --decorate
+```
 
 ---
 
