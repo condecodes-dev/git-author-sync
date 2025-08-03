@@ -56,9 +56,10 @@ except subprocess.CalledProcessError:
 try:
     branch = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"]).decode().strip()
     origin = subprocess.check_output(["git", "remote", "get-url", "origin"]).decode().strip()
-    print(f"\n✅ History rewritten successfully.")
-    print(f"\n🟡 Current branch: {branch}")
-    print(f"🔗 Remote origin: {origin}")
-    print(f"\n👉 To push your changes:\n  git push --force --tags origin 'refs/heads/*'")
+    print("\nHistory rewritten successfully.")
+    print(f"\nCurrent branch: {branch}")
+    print(f"Remote origin: {origin}")
+    print("\nTo push your changes, run:")
+    print("  git push --force --tags origin 'refs/heads/*'")
 except:
-    print("\n✅ History rewritten. No remote origin detected.")
+    print("\nHistory rewritten. No remote origin detected.")
